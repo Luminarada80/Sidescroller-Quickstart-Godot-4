@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://xxaoff7gwbrm"]
+[gd_scene load_steps=59 format=3 uid="uid://xxaoff7gwbrm"]
 
 [ext_resource type="Script" path="res://Character/player.gd" id="1_flj5s"]
 [ext_resource type="Texture2D" uid="uid://cf5vr3rdkcdr0" path="res://Art/Legacy-Fantasy - High Forest 2.3/Character/Idle/Idle-Sheet.png" id="1_uohqy"]
@@ -6,6 +6,10 @@
 [ext_resource type="Texture2D" uid="uid://b1dop62ij8uuy" path="res://Art/Legacy-Fantasy - High Forest 2.3/Character/Jump-End/Jump-End-Sheet.png" id="3_5s4db"]
 [ext_resource type="Texture2D" uid="uid://bolynyyobgkop" path="res://Art/Legacy-Fantasy - High Forest 2.3/Character/Jump-Start/Jump-Start-Sheet.png" id="4_o4p5v"]
 [ext_resource type="Texture2D" uid="uid://cilbq1jmxocd0" path="res://Art/Legacy-Fantasy - High Forest 2.3/Character/Jumlp-All/Jump-All-Sheet.png" id="5_fhfe2"]
+[ext_resource type="Script" path="res://Character/CharacterStateMachine.gd" id="7_4we5m"]
+[ext_resource type="Script" path="res://Character/GroundState.gd" id="8_e3l3y"]
+[ext_resource type="Script" path="res://Character/AirState.gd" id="9_xaf2k"]
+[ext_resource type="Script" path="res://Character/LandingState.gd" id="10_i3a7i"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mgp67"]
 atlas = ExtResource("1_uohqy")
@@ -296,10 +300,143 @@ animations = [{
 radius = 8.0
 height = 44.0
 
+[sub_resource type="Animation" id="Animation_q72bv"]
+resource_name = "idle"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("1_uohqy")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_u3jyb"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_emw2c"]
+resource_name = "run"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_c1ij0")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dqut1"]
+_data = {
+"RESET": SubResource("Animation_u3jyb"),
+"idle": SubResource("Animation_q72bv"),
+"run": SubResource("Animation_emw2c")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wbo4x"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_e423a"]
+animation = &"run"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_1duwd"]
+animation = &"run"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_ivs23"]
+blend_point_0/node = SubResource("AnimationNodeAnimation_wbo4x")
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource("AnimationNodeAnimation_e423a")
+blend_point_1/pos = 1.0
+blend_point_2/node = SubResource("AnimationNodeAnimation_1duwd")
+blend_point_2/pos = -1.0
+blend_mode = 1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3oysa"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_uhsm6"]
+states/End/position = Vector2(1212, 100)
+states/Move/node = SubResource("AnimationNodeBlendSpace1D_ivs23")
+states/Move/position = Vector2(427, 100)
+transitions = ["Start", "Move", SubResource("AnimationNodeStateMachineTransition_3oysa")]
+graph_offset = Vector2(-265, -175)
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_flj5s")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+visible = false
 position = Vector2(-32, -40)
 sprite_frames = SubResource("SpriteFrames_q1ej8")
 animation = &"idle"
@@ -309,5 +446,31 @@ centered = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_ry2ya")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_c1ij0")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_dqut1")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_uhsm6")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Move/blend_position = -0.00053674
+
+[node name="CharacterStateMachine" type="Node" parent="."]
+script = ExtResource("7_4we5m")
+
+[node name="Ground" type="Node" parent="CharacterStateMachine"]
+script = ExtResource("8_e3l3y")
+
+[node name="Air" type="Node" parent="CharacterStateMachine"]
+script = ExtResource("9_xaf2k")
+
+[node name="Landing" type="Node" parent="CharacterStateMachine"]
+script = ExtResource("10_i3a7i")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
