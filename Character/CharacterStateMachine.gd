@@ -17,7 +17,6 @@ func _ready():
 			child.character = character
 			child.playback = animation_tree["parameters/playback"]
 			
-			
 		else:
 			push_warning("Child " + child.name + " is not a State for CharacterStateMachine")
 

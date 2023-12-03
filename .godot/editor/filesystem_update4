@@ -7,3 +7,4 @@ res://Character/StateDebugLabel.gd
 res://Character/AirState.gd
 res://Character/player.gd
 res://Character/LandingState.gd
+res://Character/Attack.gd

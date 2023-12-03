@@ -1,5 +1,9 @@
-Label
+CollisionShape2D
+Area2D
+Timer
+State
 Node
+Label
 AnimationTree
 AnimationPlayer
 Sprite2D
@@ -9,6 +13,5 @@ ColorRect
 AnimatedSprite2D
 RemoteTransform2D
 Camera2D
-CollisionShape2D
 CharacterBody2D
 TileMap
