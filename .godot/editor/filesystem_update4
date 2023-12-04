@@ -8,3 +8,13 @@ res://Character/AirState.gd
 res://Character/player.gd
 res://Character/LandingState.gd
 res://Character/Attack.gd
+res://Character/Sword.gd
+res://Character/Enemies/Snail/snail.tscn
+res://Character/Enemies/Snail/Damageable.gd
+res://signal_bus.gd
+res://UI/health_changed_manager.gd
+res://UI/health_changed_manager.tscn
+res://UI/health_changed_label.tscn
+res://UI/health_changed_label.gd
+res://Character/HitState.gd
+res://Character/Enemies/Snail/snail.gd
